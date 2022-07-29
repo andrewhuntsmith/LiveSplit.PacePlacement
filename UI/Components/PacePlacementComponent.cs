@@ -219,7 +219,7 @@ namespace LiveSplit.UI.Components
                 {
                     foreach (int index in paceDict.Keys)
                     {
-                        if (paceDict[index].Count() <= i)
+                        if (paceDict[index].Count() < i)
                             continue;
 
                         DebugDisplay("Failed Listing: " + i + " " + index);
@@ -273,11 +273,14 @@ namespace LiveSplit.UI.Components
 
             for (int i = 0; i < currentSplitPaces.Count; i++)
             {
-                if (currentSplitPaces[i].RealTime >= prevSplitTime.RealTime)
-                {
-                    place = i + 1;
+                var paceEquality = timingMethod == TimingMethod.GameTime ?
+                    currentSplitPaces[i].GameTime - prevSplitTime.GameTime :
+                    currentSplitPaces[i].RealTime - prevSplitTime.RealTime;
+
+                if (paceEquality >= TimeSpan.Zero)
                     break;
-                }
+
+                place += 1;
             }
 
             return place;
