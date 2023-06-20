@@ -1,4 +1,4 @@
-﻿using LiveSplit.Model;
+using LiveSplit.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -113,14 +113,14 @@ namespace LiveSplit.UI.Components
                 GameTimePaceList = CalculatePaceList(state, TimingMethod.GameTime);
             }
 
-            if (!CurrentSplitValid && state.CurrentPhase == TimerPhase.Running)
+            if (!CurrentSplitValid && (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Ended))
             {
                 var paceList = CurrentState.CurrentTimingMethod == TimingMethod.GameTime ?
                                     GameTimePaceList : RealTimePaceList;
                 CurrentSplitValid = true;
                 CurrentPacePlacement = CalculateCurrentPlacement(state, CurrentState.CurrentTimingMethod);
                 string totalCount = state.CurrentSplitIndex > 0 ?
-                    (paceList[state.CurrentSplitIndex].Count() + 1).ToString() :
+                    (paceList[state.CurrentSplitIndex - 1].Count() + 1).ToString() :
                     state.Run.AttemptCount.ToString();
 
                 bool hidePlacement = PrevSplitSkipped && Settings.HidePlacementOnSkip;
@@ -269,19 +269,22 @@ namespace LiveSplit.UI.Components
 
             //pace list is off by one of split index
             List<Time> currentSplitPaces = paceList[state.CurrentSplitIndex - x + 1];
-            DebugDisplay("Fastest Pace: " + currentSplitPaces[0]);
+            if (currentSplitPaces.Count > 0)
+                DebugDisplay("Fastest Pace: " + currentSplitPaces[0]);
 
+            var lastPlace = true;
             for (int i = 0; i < currentSplitPaces.Count; i++)
             {
-                var paceEquality = timingMethod == TimingMethod.GameTime ?
-                    currentSplitPaces[i].GameTime - prevSplitTime.GameTime :
-                    currentSplitPaces[i].RealTime - prevSplitTime.RealTime;
-
-                if (paceEquality >= TimeSpan.Zero)
+                if (currentSplitPaces[i].RealTime >= prevSplitTime.RealTime)
+                {
+                    place = i + 1;
+                    lastPlace = false;
                     break;
-
-                place += 1;
+                }
             }
+
+            if (lastPlace)
+                place = currentSplitPaces.Count + 1;
 
             return place;
         }
