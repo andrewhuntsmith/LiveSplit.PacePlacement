@@ -120,7 +120,7 @@ namespace LiveSplit.UI.Components
                 CurrentSplitValid = true;
                 CurrentPacePlacement = CalculateCurrentPlacement(state, CurrentState.CurrentTimingMethod);
                 string totalCount = state.CurrentSplitIndex > 0 ?
-                    (paceList[state.CurrentSplitIndex - 1].Count() + 1).ToString() :
+                    (paceList[state.CurrentSplitIndex].Count() + 1).ToString() :
                     state.Run.AttemptCount.ToString();
 
                 bool hidePlacement = PrevSplitSkipped && Settings.HidePlacementOnSkip;
