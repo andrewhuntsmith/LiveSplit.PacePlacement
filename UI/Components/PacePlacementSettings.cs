@@ -10,6 +10,7 @@ namespace LiveSplit.UI.Components
         public bool ShowAllPlaces { get; set; }
         public bool ShowDebugText { get; set; }
         public bool HidePlacementOnSkip { get; set; }
+        public string LabelText { get; set; }
         public LayoutMode Mode { get; set; }
 
         public PacePlacementSettings()
@@ -18,6 +19,7 @@ namespace LiveSplit.UI.Components
             Display2Rows = false;
             ShowAllPlaces = true;
             ShowDebugText = false;
+            LabelText = "Pace Placement";
         }
 
         private void PacePlacementSettings_Load(object sender, EventArgs e)
@@ -46,6 +48,10 @@ namespace LiveSplit.UI.Components
             chkHidePlacement.Enabled = true;
             chkHidePlacement.DataBindings.Clear();
             chkHidePlacement.DataBindings.Add("Checked", this, "HidePlacementOnSkip", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            txtLabelText.Enabled = true;
+            txtLabelText.DataBindings.Clear();
+            txtLabelText.DataBindings.Add("Text", this, "LabelText", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private int CreateSettingsNode(XmlDocument document, XmlElement parent)
@@ -54,6 +60,7 @@ namespace LiveSplit.UI.Components
                 SettingsHelper.CreateSetting(document, parent, "ShowAllPlaces", ShowAllPlaces) ^
                 SettingsHelper.CreateSetting(document, parent, "Display2Rows", Display2Rows) ^
                 SettingsHelper.CreateSetting(document, parent, "HidePlacementOnSkip", HidePlacementOnSkip) ^
+                SettingsHelper.CreateSetting(document, parent, "LabelText", LabelText) ^
                 SettingsHelper.CreateSetting(document, parent, "ShowDebugText", ShowDebugText);
         }
 
@@ -76,6 +83,7 @@ namespace LiveSplit.UI.Components
             Display2Rows = SettingsHelper.ParseBool(element["Display2Rows"], false);
             ShowDebugText = SettingsHelper.ParseBool(element["ShowDebugText"], false);
             HidePlacementOnSkip = SettingsHelper.ParseBool(element["HidePlacementOnSkip"], false);
+            LabelText = SettingsHelper.ParseString(element["LabelText"], "Pace Placement");
         }
     }
 }

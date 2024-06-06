@@ -38,7 +38,7 @@ namespace LiveSplit.UI.Components
         public PacePlacementComponent(LiveSplitState state)
         {
             Settings = new PacePlacementSettings();
-            InternalComponent = new InfoTextComponent("Pace Placement", "...");
+            InternalComponent = new InfoTextComponent(Settings.LabelText, "...");
 
             state.OnStart += state_OnStart;
             state.OnSplit += state_OnSplitChange;
@@ -66,6 +66,7 @@ namespace LiveSplit.UI.Components
             = InternalComponent.ValueLabel.HasShadow
             = state.LayoutSettings.DropShadows;
 
+            InternalComponent.NameLabel.Text = Settings.LabelText;
             InternalComponent.NameLabel.ForeColor = state.LayoutSettings.TextColor;
             InternalComponent.ValueLabel.ForeColor = state.LayoutSettings.TextColor;
 
@@ -80,6 +81,7 @@ namespace LiveSplit.UI.Components
                 = InternalComponent.ValueLabel.HasShadow
                 = state.LayoutSettings.DropShadows;
 
+            InternalComponent.NameLabel.Text = Settings.LabelText;
             InternalComponent.NameLabel.ForeColor = state.LayoutSettings.TextColor;
             InternalComponent.ValueLabel.ForeColor = state.LayoutSettings.TextColor;
 
