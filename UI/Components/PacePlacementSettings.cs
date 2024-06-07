@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -12,6 +13,8 @@ namespace LiveSplit.UI.Components
         public bool HidePlacementOnSkip { get; set; }
         public string LabelText { get; set; }
         public LayoutMode Mode { get; set; }
+        public Color NameColor { get; set; }
+        public Color ValueColor { get; set; }
 
         public PacePlacementSettings()
         {
@@ -20,6 +23,8 @@ namespace LiveSplit.UI.Components
             ShowAllPlaces = true;
             ShowDebugText = false;
             LabelText = "Pace Placement";
+            NameColor = Color.White;
+            ValueColor = Color.White;
         }
 
         private void PacePlacementSettings_Load(object sender, EventArgs e)
@@ -52,6 +57,14 @@ namespace LiveSplit.UI.Components
             txtLabelText.Enabled = true;
             txtLabelText.DataBindings.Clear();
             txtLabelText.DataBindings.Add("Text", this, "LabelText", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            clrNameButton.Enabled = true;
+            clrNameButton.DataBindings.Clear();
+            clrNameButton.DataBindings.Add("BackColor", this, "NameColor", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            clrValueButton.Enabled = true;
+            clrValueButton.DataBindings.Clear();
+            clrValueButton.DataBindings.Add("BackColor", this, "ValueColor", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private int CreateSettingsNode(XmlDocument document, XmlElement parent)
@@ -61,7 +74,9 @@ namespace LiveSplit.UI.Components
                 SettingsHelper.CreateSetting(document, parent, "Display2Rows", Display2Rows) ^
                 SettingsHelper.CreateSetting(document, parent, "HidePlacementOnSkip", HidePlacementOnSkip) ^
                 SettingsHelper.CreateSetting(document, parent, "LabelText", LabelText) ^
-                SettingsHelper.CreateSetting(document, parent, "ShowDebugText", ShowDebugText);
+                SettingsHelper.CreateSetting(document, parent, "ShowDebugText", ShowDebugText) ^
+                SettingsHelper.CreateSetting(document, parent, "NameColor", NameColor) ^
+                SettingsHelper.CreateSetting(document, parent, "ValueColor", ValueColor);
         }
 
         public XmlNode GetSettings(XmlDocument document)
@@ -84,6 +99,32 @@ namespace LiveSplit.UI.Components
             ShowDebugText = SettingsHelper.ParseBool(element["ShowDebugText"], false);
             HidePlacementOnSkip = SettingsHelper.ParseBool(element["HidePlacementOnSkip"], false);
             LabelText = SettingsHelper.ParseString(element["LabelText"], "Pace Placement");
+            NameColor = SettingsHelper.ParseColor(element["NameColor"], Color.White);
+            ValueColor = SettingsHelper.ParseColor(element["ValueColor"], Color.White);
+        }
+
+        private void clrNameButton_Click(object sender, EventArgs e)
+        {
+            var colorDlg = new ColorDialog();
+            colorDlg.AnyColor = true;
+            colorDlg.SolidColorOnly = false;
+            colorDlg.Color = clrNameButton.BackColor;
+            colorDlg.AllowFullOpen = true;
+            
+            if (colorDlg.ShowDialog() == DialogResult.OK)
+                clrNameButton.BackColor = colorDlg.Color;
+        }
+
+        private void clrValueButton_Click(object sender, EventArgs e)
+        {
+            var colorDlg = new ColorDialog();
+            colorDlg.AnyColor = true;
+            colorDlg.SolidColorOnly = false;
+            colorDlg.Color = clrValueButton.BackColor;
+            colorDlg.AllowFullOpen = true;
+
+            if (colorDlg.ShowDialog() == DialogResult.OK)
+                clrValueButton.BackColor = colorDlg.Color;
         }
     }
 }
