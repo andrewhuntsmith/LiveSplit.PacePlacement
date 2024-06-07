@@ -13,7 +13,9 @@ namespace LiveSplit.UI.Components
         public bool HidePlacementOnSkip { get; set; }
         public string LabelText { get; set; }
         public LayoutMode Mode { get; set; }
+        public bool UseDefaultColorForName { get; set; }
         public Color NameColor { get; set; }
+        public bool UseDefaultColorForValue { get; set; }
         public Color ValueColor { get; set; }
 
         public PacePlacementSettings()
@@ -65,6 +67,14 @@ namespace LiveSplit.UI.Components
             clrValueButton.Enabled = true;
             clrValueButton.DataBindings.Clear();
             clrValueButton.DataBindings.Add("BackColor", this, "ValueColor", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            chkDefaultLabelColor.Enabled = true;
+            chkDefaultLabelColor.DataBindings.Clear();
+            chkDefaultLabelColor.DataBindings.Add("Checked", this, "UseDefaultColorForName", false, DataSourceUpdateMode.OnPropertyChanged);
+
+            chkDefaultValueColor.Enabled = true;
+            chkDefaultValueColor.DataBindings.Clear();
+            chkDefaultValueColor.DataBindings.Add("Checked", this, "UseDefaultColorForValue", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private int CreateSettingsNode(XmlDocument document, XmlElement parent)
@@ -75,7 +85,9 @@ namespace LiveSplit.UI.Components
                 SettingsHelper.CreateSetting(document, parent, "HidePlacementOnSkip", HidePlacementOnSkip) ^
                 SettingsHelper.CreateSetting(document, parent, "LabelText", LabelText) ^
                 SettingsHelper.CreateSetting(document, parent, "ShowDebugText", ShowDebugText) ^
+                SettingsHelper.CreateSetting(document, parent, "UseDefaultColorForName", UseDefaultColorForName) ^
                 SettingsHelper.CreateSetting(document, parent, "NameColor", NameColor) ^
+                SettingsHelper.CreateSetting(document, parent, "UseDefaultColorForValue", UseDefaultColorForValue) ^
                 SettingsHelper.CreateSetting(document, parent, "ValueColor", ValueColor);
         }
 
@@ -99,7 +111,9 @@ namespace LiveSplit.UI.Components
             ShowDebugText = SettingsHelper.ParseBool(element["ShowDebugText"], false);
             HidePlacementOnSkip = SettingsHelper.ParseBool(element["HidePlacementOnSkip"], false);
             LabelText = SettingsHelper.ParseString(element["LabelText"], "Pace Placement");
+            UseDefaultColorForName = SettingsHelper.ParseBool(element["UseDefaultColorForName"], true);
             NameColor = SettingsHelper.ParseColor(element["NameColor"], Color.White);
+            UseDefaultColorForValue = SettingsHelper.ParseBool(element["UseDefaultColorForValue"], true);
             ValueColor = SettingsHelper.ParseColor(element["ValueColor"], Color.White);
         }
 
@@ -125,6 +139,16 @@ namespace LiveSplit.UI.Components
 
             if (colorDlg.ShowDialog() == DialogResult.OK)
                 clrValueButton.BackColor = colorDlg.Color;
+        }
+
+        private void chkDefaultLabelColor_CheckedChanged(object sender, EventArgs e)
+        {
+            clrNameButton.Enabled = !chkDefaultLabelColor.Checked;
+        }
+
+        private void chkDefaultValueColor_CheckedChanged(object sender, EventArgs e)
+        {
+            clrValueButton.Enabled = !chkDefaultValueColor.Checked;
         }
     }
 }

@@ -67,8 +67,8 @@ namespace LiveSplit.UI.Components
             = state.LayoutSettings.DropShadows;
 
             InternalComponent.NameLabel.Text = Settings.LabelText;
-            InternalComponent.NameLabel.ForeColor = Settings.NameColor;
-            InternalComponent.ValueLabel.ForeColor = Settings.ValueColor;
+            InternalComponent.NameLabel.ForeColor = Settings.UseDefaultColorForName ? state.LayoutSettings.TextColor : Settings.NameColor;
+            InternalComponent.ValueLabel.ForeColor = Settings.UseDefaultColorForValue ? state.LayoutSettings.TextColor : Settings.ValueColor;
 
             InternalComponent.DrawHorizontal(g, state, height, clipRegion);
         }
@@ -82,8 +82,8 @@ namespace LiveSplit.UI.Components
                 = state.LayoutSettings.DropShadows;
 
             InternalComponent.NameLabel.Text = Settings.LabelText;
-            InternalComponent.NameLabel.ForeColor = Settings.NameColor;
-            InternalComponent.ValueLabel.ForeColor = Settings.ValueColor;
+            InternalComponent.NameLabel.ForeColor = Settings.UseDefaultColorForName ? state.LayoutSettings.TextColor : Settings.NameColor;
+            InternalComponent.ValueLabel.ForeColor = Settings.UseDefaultColorForValue ? state.LayoutSettings.TextColor : Settings.ValueColor;
 
             InternalComponent.DrawVertical(g, state, width, clipRegion);
         }
